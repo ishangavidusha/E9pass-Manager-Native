@@ -1,0 +1,1 @@
+enum FileType {File, Directory}
