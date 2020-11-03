@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:e9pass_manager/models/arcModel.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
@@ -6,8 +5,7 @@ import 'package:pdf/widgets.dart ' as pw;
 
 class PdfFactory {
   pw.Document pdf;
-  PdfImage arcPdfImage;
-  PdfImage personPdfImage;
+  
 
   Future<pw.Document> getPdfFileWithStatement(List<ArcImage> fileList) async {
     pdf = pw.Document();
@@ -16,19 +14,11 @@ class PdfFactory {
     var myFont = pw.Font.ttf(data);
     var kFont = pw.Font.ttf(kFontData);
     fileList.forEach((element) {
-      Uint8List arcImage = element.bytes;
+      PdfImage arcPdfImage = PdfImage.file(pdf.document, bytes: element.bytes);
       String name = element.name;
       String phoneNumber = ' ';
       String appNumber = ' '; 
       String arcNumber = element.arcNumber;
-      if (arcImage != null) {
-        arcPdfImage = PdfImage.file(
-          pdf.document,
-          bytes: arcImage,
-        );
-      } else {
-        arcPdfImage = null;
-      }
       DateTime dateTime = DateTime.now();
       name = name != null && name.length > 0 ? name : ' ';
       phoneNumber = phoneNumber != null && phoneNumber.length > 0 ? phoneNumber : ' ';

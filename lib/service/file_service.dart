@@ -49,6 +49,34 @@ List<ArcImage> readImages(FileChooserResult result) {
   return data;
 }
 
+List<Certificate> processImage(List<FileSystemEntity> fileSystemEntityList) {
+  List<Certificate> selectedDirCert = List();
+  fileSystemEntityList.forEach((FileSystemEntity fileSystemEntity) {
+    if (FileSystemEntity.isDirectorySync(fileSystemEntity.path)) {
+      if (p.split(fileSystemEntity.absolute.path).last.contains('ou=RA센터,ou=e9pay,ou=등록기관,ou=licensedCA,o=KICA,c=KR')) {
+        final certFiles = Directory(fileSystemEntity.absolute.path).listSync(recursive: true).toList();
+        final files = certFiles.map((element) => MyFile(
+          name: p.split(element.absolute.path).last,
+          path: element.absolute.path,
+          type: FileType.File,
+        )).toList();
+        selectedDirCert.add(
+          Certificate(
+            name: getCertName(p.split(fileSystemEntity.absolute.path).last),
+            path: fileSystemEntity.absolute.path,
+            files: files
+          )
+        );
+      }
+    }
+  });
+  return selectedDirCert;
+}
+
+String getCertName(String folderName) {
+  return folderName.split(',').first.split('=').elementAt(1);
+}
+
 String getName(String fileName) {
     try {
       return fileName.split('_').elementAt(1);
@@ -154,26 +182,7 @@ class FileService with ChangeNotifier {
     if (certFolderPath != null) {
       try {
         final fileSystemEntityList = await compute(readDir, certFolderPath);
-        fileSystemEntityList.forEach((FileSystemEntity fileSystemEntity) {
-          if (FileSystemEntity.isDirectorySync(fileSystemEntity.path)) {
-            if (p.split(fileSystemEntity.absolute.path).last.contains('ou=RA센터,ou=e9pay,ou=등록기관,ou=licensedCA,o=KICA,c=KR')) {
-              final certFiles = Directory(fileSystemEntity.absolute.path).listSync(recursive: true).toList();
-              final files = certFiles.map((element) => MyFile(
-                name: p.split(element.absolute.path).last,
-                path: element.absolute.path,
-                type: FileType.File,
-              )).toList();
-              selectedDirCert.add(
-                Certificate(
-                  name: getCertName(p.split(fileSystemEntity.absolute.path).last),
-                  path: fileSystemEntity.absolute.path,
-                  files: files
-                )
-              );
-            }
-            notifyListeners();
-          }
-        });
+        selectedDirCert.addAll(await compute(processImage, fileSystemEntityList));
       } on FileSystemException catch (e) {
         print(e.toString());
         notifyListeners();

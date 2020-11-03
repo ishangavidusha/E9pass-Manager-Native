@@ -33,9 +33,9 @@ dependencies:
   path: ^1.7.0
   dotted_border: ^1.0.6
   giffy_dialog: ^1.8.0
-  rive: ^0.6.2
   image: ^2.1.18
   pdf: ^1.11.2
+  flare_flutter: ^2.0.6
   extended_image:
     git:
       url: git://github.com/ductranit/extended_image.git
@@ -71,6 +71,7 @@ flutter:
     - assets/icons/
     - assets/animation/
     - assets/fonts/GothicA1-Medium.ttf
+    - assets/fonts/OpenSans-SemiBold.ttf
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

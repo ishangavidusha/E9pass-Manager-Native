@@ -2,6 +2,7 @@ import 'package:e9pass_manager/service/file_service.dart';
 import 'package:e9pass_manager/utils/my_colors.dart';
 import 'package:e9pass_manager/widgets/get_folder_path_ui.dart';
 import 'package:e9pass_manager/widgets/kbutton.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:provider/provider.dart';
@@ -181,7 +182,7 @@ class _CertSearchViewState extends State<CertSearchView> {
                 ),
               ),
               Divider(color: AppColors.secondTextColor,),
-              Expanded(
+              !_fileService.indexing ? Expanded(
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: _fileService.searchResult.length,
@@ -271,6 +272,17 @@ class _CertSearchViewState extends State<CertSearchView> {
                       ),
                     );
                   },
+                ),
+              ) : Center(
+                child: SizedBox(
+                  width: devWidth,
+                  height: devHeight * 0.6,
+                  child: FlareActor(
+                    'assets/animation/Penguin.flr',
+                    alignment: Alignment.center,
+                    fit: BoxFit.contain,
+                    animation: 'walk',
+                  ),
                 ),
               )
             ],
