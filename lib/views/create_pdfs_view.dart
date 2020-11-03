@@ -1,11 +1,15 @@
 import 'package:e9pass_manager/service/file_service.dart';
 import 'package:e9pass_manager/service/image_servise.dart';
+import 'package:e9pass_manager/service/pdf_service.dart';
 import 'package:e9pass_manager/utils/my_colors.dart';
 import 'package:e9pass_manager/views/image_edit_view.dart';
 import 'package:e9pass_manager/widgets/get_files_ui.dart';
 import 'package:e9pass_manager/widgets/kbutton.dart';
 import 'package:flutter/material.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:pdf/widgets.dart ' as pw;
 
 class CreatePDFs extends StatefulWidget {
   @override
@@ -14,6 +18,9 @@ class CreatePDFs extends StatefulWidget {
 
 class _CreatePDFsState extends State<CreatePDFs> {
   FileService _fileService;
+  PdfFactory _pdfFactory = PdfFactory();
+  bool loading = false;
+  bool converting = false;
   @override
   Widget build(BuildContext context) {
     double devWidth = MediaQuery.of(context).size.width - 200;
@@ -107,6 +114,74 @@ class _CreatePDFsState extends State<CreatePDFs> {
                     selected: false,
                   ),
                 ),
+                Transform.scale(
+                  scale: 0.8,
+                  child: KButton(
+                    text: 'Select Images',
+                    onPressed: () {
+                      _fileService.getImageFiles(false);
+                    },
+                    selected: false,
+                  ),
+                ),
+                Transform.scale(
+                  scale: 0.8,
+                  child: KButton(
+                    text: 'Export',
+                    onPressed: _fileService.pickedImages.isNotEmpty ? () async {
+                      setState(() {
+                        converting = true;
+                      });
+                      pw.Document document = await _pdfFactory.getPdfFileWithStatement(_fileService.pickedImages);
+                      String fileName = DateFormat("yyyyMMddhhmmss").format(DateTime.now());
+                      _fileService.savePdf(document.save(), fileName).then((value) => {
+                        if (value) {
+                          showDialog(
+                            context: context,builder: (_) => FlareGiffyDialog(
+                              flarePath: 'assets/animation/loading-error-and-check.flr',
+                              flareAnimation: 'success',
+                              title: Text('Successfully Saved!',
+                                  style: TextStyle(
+                                  fontSize: 22.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              entryAnimation: EntryAnimation.TOP,
+                              onlyOkButton: true,
+                              cardBackgroundColor: AppColors.secondTextColor,
+                              onOkButtonPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          )
+                        } else {
+                          showDialog(
+                            context: context,builder: (_) => FlareGiffyDialog(
+                              flarePath: 'assets/animation/loading-error-and-check.flr',
+                              flareAnimation: 'failure',
+                              title: Text('Failed to save PDF',
+                                  style: TextStyle(
+                                  fontSize: 22.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              entryAnimation: EntryAnimation.TOP,
+                              onlyOkButton: true,
+                              cardBackgroundColor: AppColors.secondTextColor,
+                              onOkButtonPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          )
+                        }
+                      });
+                      setState(() {
+                        converting = false;
+                      });
+                    } : null,
+                    selected: false,
+                  ),
+                ),
               ],
             ),
           ),
@@ -124,8 +199,11 @@ class _CreatePDFsState extends State<CreatePDFs> {
                   child: GestureDetector(
                     onTap: () async {
                       // Go to edit
+                      setState(() {
+                        loading = true;
+                      });
                       Provider.of<ImageService>(context, listen: false).clear();
-                      Provider.of<ImageService>(context, listen: false).setImage(_fileService.pickedImages[index]);
+                      await Provider.of<ImageService>(context, listen: false).setImage(_fileService.pickedImages[index]);
                       bool edited = await Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => ImageEditView()),
@@ -137,6 +215,9 @@ class _CreatePDFsState extends State<CreatePDFs> {
                         _fileService.pickedImages[index].bytes = Provider.of<ImageService>(context, listen: false).getOriginal();
                         _fileService.pickedImages[index].raw = true;
                       }
+                      setState(() {
+                        loading = false;
+                      });
                     },
                     child: Container(
                       decoration: BoxDecoration(

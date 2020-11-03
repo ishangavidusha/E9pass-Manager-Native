@@ -29,7 +29,7 @@ class ImageService with ChangeNotifier {
   int _height;
   bool _loading = false;
 
-  void setImage(ArcImage arcImage) async {
+  Future setImage(ArcImage arcImage) async {
     _original = await compute(readImage, arcImage.bytes);
     _image = _original;
     _width = _image.width;
@@ -37,8 +37,8 @@ class ImageService with ChangeNotifier {
     notifyListeners();
   }
 
-  int get width => _width == null ? 0.0 : _width;
-  int get height => _height == null ? 0.0 : _height;
+  int get width => _width == null ? 0 : _width;
+  int get height => _height == null ? 0 : _height;
   bool get loading => _loading;
 
   Uint8List getImage() {

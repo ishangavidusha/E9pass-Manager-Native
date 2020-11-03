@@ -14,7 +14,7 @@ class _ImageEditViewState extends State<ImageEditView> {
   final GlobalKey<ExtendedImageEditorState> editorKey = GlobalKey<ExtendedImageEditorState>();
   ImageService _imageService;
   bool _cropping = false;
-  double widthValue = 0.0;
+  double widthValue;
 
   Future<void> cropImage() async {
     if (_cropping) {
@@ -32,9 +32,9 @@ class _ImageEditViewState extends State<ImageEditView> {
 
   @override
   Widget build(BuildContext context) {
-    double devWidth = MediaQuery.of(context).size.width - 200;
+    double devWidth = MediaQuery.of(context).size.width;
     _imageService = Provider.of<ImageService>(context);
-    widthValue = _imageService.width.toDouble() ?? 0.0;
+    widthValue ??= _imageService.width.toDouble() ?? 0.0;
     return Scaffold(
       body: Stack(
         children: [
@@ -47,7 +47,7 @@ class _ImageEditViewState extends State<ImageEditView> {
             initEditorConfigHandler: (ExtendedImageState state) {
               return EditorConfig(
                 maxScale: 8.0,
-                cropRectPadding: EdgeInsets.fromLTRB(20, 20, 20, 140),
+                cropRectPadding: EdgeInsets.fromLTRB(20, 20, 20, 160),
                 hitTestSize: 20.0,
                 initCropRectType: InitCropRectType.imageRect,
                 cropAspectRatio: CropAspectRatios.custom,
@@ -64,74 +64,49 @@ class _ImageEditViewState extends State<ImageEditView> {
               children: [
                 Container(
                   padding: EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: Colors.red[700],
-                          inactiveTrackColor: Colors.red[100],
-                          trackShape: RoundedRectSliderTrackShape(),
-                          trackHeight: 4.0,
-                          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                          thumbColor: Colors.redAccent,
-                          overlayColor: Colors.red.withAlpha(32),
-                          overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
-                          tickMarkShape: RoundSliderTickMarkShape(),
-                          activeTickMarkColor: Colors.red[700],
-                          inactiveTickMarkColor: Colors.red[100],
-                          valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-                          valueIndicatorColor: Colors.redAccent,
-                          valueIndicatorTextStyle: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        child: Slider(
-                          min: 0.0,
-                          max: _imageService.width.toDouble() * 2,
-                          value: widthValue,
-                          divisions: 50,
-                          onChangeEnd: (value) async {
-                            Map<String, dynamic> result = await _imageService.resize(value.toInt(), _imageService.height);
-                            setState(() {
-                              widthValue = result['width'];
-                            });
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              widthValue = value;
-                            });
-                          },
-                          label: '${_imageService.width}',
-                        ),
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: Colors.red[700],
+                      inactiveTrackColor: Colors.red[100],
+                      trackShape: RoundedRectSliderTrackShape(),
+                      trackHeight: 4.0,
+                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                      thumbColor: Colors.redAccent,
+                      overlayColor: Colors.red.withAlpha(32),
+                      overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+                      tickMarkShape: RoundSliderTickMarkShape(),
+                      activeTickMarkColor: Colors.red[700],
+                      inactiveTickMarkColor: Colors.red[100],
+                      valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+                      valueIndicatorColor: Colors.redAccent,
+                      valueIndicatorTextStyle: TextStyle(
+                        color: Colors.white,
                       ),
-                      Spacer(),
-                      RaisedButton(
-                        onPressed: () async {
-                          _imageService.resetEdits();
-                        },
-                        color: AppColors.btColor,
-                        child: Row(
-                          children: [
-                            Icon(Icons.restore, color: Colors.white,),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Reset Image',
-                              style: TextStyle(
-                                color: Colors.white
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
+                    child: Slider(
+                      min: 0.0,
+                      max: _imageService.width.toDouble() * 2,
+                      value: widthValue,
+                      divisions: 50,
+                      onChangeEnd: (value) async {
+                        Map<String, dynamic> result = await _imageService.resize(value.toInt(), _imageService.height);
+                        setState(() {
+                          widthValue = result['width'];
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          widthValue = value;
+                        });
+                      },
+                      label: '${_imageService.width}',
+                    ),
                   ),
                 ),
                 Container(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       RaisedButton(
                         onPressed: () async {

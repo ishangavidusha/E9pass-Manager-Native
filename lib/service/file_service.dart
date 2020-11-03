@@ -19,7 +19,7 @@ bool copyCertificate(Map<String, dynamic> data) {
   final Directory directory = Directory(destinationPath);
   try {
     if (!directory.existsSync()) {
-    directory.createSync(recursive: true);
+      directory.createSync(recursive: true);
     }
     certificate.files.forEach((element) {
       File(element.path).copySync(p.join(directory.path, element.name));
@@ -82,7 +82,7 @@ class FileService with ChangeNotifier {
       ]
     );
     if (result.canceled != true) {
-      pickedImages = await compute(readImages, result);
+      pickedImages.addAll(await compute(readImages, result));
       notifyListeners();
       return true;
     } else {
