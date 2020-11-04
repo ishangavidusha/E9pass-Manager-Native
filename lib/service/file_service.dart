@@ -49,7 +49,7 @@ List<ArcImage> readImages(FileChooserResult result) {
   return data;
 }
 
-List<Certificate> processImage(List<FileSystemEntity> fileSystemEntityList) {
+List<Certificate> processCertificate(List<FileSystemEntity> fileSystemEntityList) {
   List<Certificate> selectedDirCert = List();
   fileSystemEntityList.forEach((FileSystemEntity fileSystemEntity) {
     if (FileSystemEntity.isDirectorySync(fileSystemEntity.path)) {
@@ -91,6 +91,7 @@ class FileService with ChangeNotifier {
   String certFolderPath;
   bool indexing = false;
   List<ArcImage> pickedImages = List();
+  
 
   Future<bool> getImageFiles(bool add) async {
     if (!add) {
@@ -176,13 +177,12 @@ class FileService with ChangeNotifier {
     searchResult.clear();
     selectedDirCert.clear();
     indexing = true;
-    notifyListeners();
     certFolderPath = await getFolderPath();
     notifyListeners();
     if (certFolderPath != null) {
       try {
         final fileSystemEntityList = await compute(readDir, certFolderPath);
-        selectedDirCert.addAll(await compute(processImage, fileSystemEntityList));
+        selectedDirCert.addAll(await compute(processCertificate, fileSystemEntityList));
       } on FileSystemException catch (e) {
         print(e.toString());
         notifyListeners();

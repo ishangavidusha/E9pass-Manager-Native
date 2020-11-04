@@ -1,6 +1,7 @@
 import 'package:e9pass_manager/utils/my_colors.dart';
 import 'package:e9pass_manager/views/cert_search_view.dart';
 import 'package:e9pass_manager/views/create_pdfs_view.dart';
+import 'package:e9pass_manager/views/zip_archive_create_view.dart';
 import 'package:e9pass_manager/widgets/app_main_logo.dart';
 import 'package:e9pass_manager/widgets/drower_button.dart';
 import 'package:flutter/material.dart';
@@ -56,35 +57,23 @@ class _HomePageState extends State<HomePage> {
                 ),
                 DrowerButton(
                   onPressed: () {
-                    _pageController.animateToPage(
-                      0,
-                      curve: Curves.fastOutSlowIn,
-                      duration: Duration(milliseconds: 600)
-                    );
+                    _pageController.jumpToPage(0);
                   },
                   text: 'Search Certificates',
                   selected: selectedPage[0],
                 ),
                 DrowerButton(
                   onPressed: () {
-                    _pageController.animateToPage(
-                      1,
-                      curve: Curves.fastOutSlowIn,
-                      duration: Duration(milliseconds: 600)
-                    );
+                    _pageController.jumpToPage(1);
                   },
                   text: 'Create PDFs',
                   selected: selectedPage[1],
                 ),
                 DrowerButton(
                   onPressed: () {
-                    _pageController.animateToPage(
-                      2,
-                      curve: Curves.fastOutSlowIn,
-                      duration: Duration(milliseconds: 600)
-                    );
+                    _pageController.jumpToPage(2);
                   },
-                  text: 'Search',
+                  text: 'Zip Maker',
                   selected: selectedPage[2],
                 )
               ],
@@ -108,9 +97,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 CertSearchView(),
                 CreatePDFs(),
-                Container(
-                  color: Colors.orange,
-                ),
+                ZipCreatView()
               ],
             ),
           ),

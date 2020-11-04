@@ -16,14 +16,14 @@ class PdfFactory {
     fileList.forEach((element) {
       PdfImage arcPdfImage = PdfImage.file(pdf.document, bytes: element.bytes);
       String name = element.name;
-      String phoneNumber = ' ';
-      String appNumber = ' '; 
+      String phoneNumber = '';
+      String appNumber = '';
       String arcNumber = element.arcNumber;
       DateTime dateTime = DateTime.now();
-      name = name != null && name.length > 0 ? name : ' ';
-      phoneNumber = phoneNumber != null && phoneNumber.length > 0 ? phoneNumber : ' ';
-      appNumber = appNumber != null && appNumber.length > 0 ? appNumber : ' ';
-      arcNumber = arcNumber != null && arcNumber.length > 0 ? arcNumber : ' ';
+      name = name != null && name.length > 0 ? name : '__________________________________________________________';
+      phoneNumber = phoneNumber != null && phoneNumber.length > 0 ? phoneNumber : '____________________';
+      appNumber = appNumber != null && appNumber.length > 0 ? appNumber : '_____________________________';
+      arcNumber = arcNumber != null && arcNumber.length > 0 ? arcNumber : '_____________________________';
       double devHeight = PdfPageFormat.a4.availableHeight;
       double devWidth = PdfPageFormat.a4.availableWidth;
 
@@ -178,7 +178,7 @@ class PdfFactory {
                                 '$name',
                                 style: pw.TextStyle(
                                   fontSize: 10,
-                                  font: myFont,
+                                  font: kFont,
                                   letterSpacing: 1.0,
                                   lineSpacing: 1.0,
                                 ),
