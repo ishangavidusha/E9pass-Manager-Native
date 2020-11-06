@@ -273,16 +273,27 @@ class _CertSearchViewState extends State<CertSearchView> {
                     );
                   },
                 ),
-              ) : Center(
-                child: SizedBox(
-                  width: devWidth,
-                  height: devHeight * 0.6,
-                  child: FlareActor(
-                    'assets/animation/Penguin.flr',
-                    alignment: Alignment.center,
-                    fit: BoxFit.contain,
-                    animation: 'walk',
-                  ),
+              ) : Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: FlareActor(
+                            'assets/animation/Penguin.flr',
+                            alignment: Alignment.center,
+                            fit: BoxFit.contain,
+                            animation: 'walk',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               )
             ],

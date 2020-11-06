@@ -1,32 +1,30 @@
 import 'package:e9pass_manager/models/certModel.dart';
+import 'package:e9pass_manager/models/pdfModel.dart';
 
-class ExcelSheet {
-  String sheetName;
-  String sheetPath;
-  List<SheetColumn> coloums;
-  List<String> applicationNumbers;
-  List<String> arcNumber;
-  List<String> userNames;
-  List<String> passStatus;
-  List<DateTime> dateTimes;
-  List<Certificate> certificates;
-  List<String> pdfFilePaths;
+class ZipResult {
+  String applicationNumber;
+  String arcNumber;
+  String userName;
+  String passStatu;
+  DateTime dateTime;
+  Certificate certificate;
+  PdfFile pdfFile;
+  bool ziped;
 
-  ExcelSheet({
-    this.sheetName,
-    this.sheetPath,
-    this.applicationNumbers,
+  ZipResult({
+    this.applicationNumber,
     this.arcNumber,
-    this.userNames,
-    this.passStatus,
-    this.dateTimes,
-    this.certificates,
-    this.pdfFilePaths,
+    this.userName,
+    this.passStatu,
+    this.dateTime,
+    this.certificate,
+    this.pdfFile,
+    this.ziped = false,
   });
 
   @override
   String toString() {
-    return sheetName;
+    return userName;
   }
 }
 

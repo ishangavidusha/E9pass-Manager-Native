@@ -37,6 +37,8 @@ dependencies:
   pdf: ^1.11.2
   flare_flutter: ^2.0.6
   excel: ^1.1.5
+  draggable_scrollbar: ^0.0.4
+  archive: ^2.0.13
   extended_image:
     git:
       url: git://github.com/ductranit/extended_image.git

@@ -1,6 +1,7 @@
 import 'package:e9pass_manager/service/file_service.dart';
 import 'package:e9pass_manager/service/zip_service.dart';
 import 'package:e9pass_manager/utils/my_colors.dart';
+import 'package:e9pass_manager/views/zip_result_view.dart';
 import 'package:e9pass_manager/widgets/kbutton.dart';
 import 'package:e9pass_manager/widgets/open_file_ui.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +88,7 @@ class _ZipCreatViewState extends State<ZipCreatView> {
                         ),
                       ),
                       SizedBox(
-                        width: 250,
+                        width: devWidth * 0.4,
                         child: Text(
                           _zipService.excelFilePath,
                           style: TextStyle(
@@ -96,6 +97,7 @@ class _ZipCreatViewState extends State<ZipCreatView> {
                             letterSpacing: 1.2,
                             color: AppColors.textColor
                           ),
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -110,6 +112,21 @@ class _ZipCreatViewState extends State<ZipCreatView> {
                       text: 'Change File',
                       onPressed: () {
                         _zipService.getExcelFilePath();
+                      },
+                      selected: false,
+                    ),
+                  ),
+                  Spacer(),
+                  Transform.scale(
+                    scale: 0.8,
+                    child: KButton(
+                      text: 'Next',
+                      onPressed: () {
+                        _zipService.getCertificateFiles();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ZipResultView()),
+                        );
                       },
                       selected: false,
                     ),
