@@ -164,27 +164,27 @@ class _ZipResultViewState extends State<ZipResultView> {
                             SizedBox(
                               width: 20,
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  'PDF : ',
-                                  style: TextStyle(
-                                    color: AppColors.textColor,
-                                    fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                                Text(
-                                  _zipService.zipResult[index].pdfFile != null ? 'PDF Found' : 'Not Found',
-                                  style: TextStyle(
-                                    color: _zipService.zipResult[index].pdfFile != null ? Colors.blue : AppColors.selectedBtColor,
-                                    fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
+                            // Row(
+                            //   children: [
+                            //     Text(
+                            //       'PDF : ',
+                            //       style: TextStyle(
+                            //         color: AppColors.textColor,
+                            //         fontWeight: FontWeight.bold
+                            //       ),
+                            //     ),
+                            //     Text(
+                            //       _zipService.zipResult[index].pdfFile != null ? 'PDF Found' : 'Not Found',
+                            //       style: TextStyle(
+                            //         color: _zipService.zipResult[index].pdfFile != null ? Colors.blue : AppColors.selectedBtColor,
+                            //         fontWeight: FontWeight.bold
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                            // SizedBox(
+                            //   width: 20,
+                            // ),
                             _zipService.zipResult[index].ziped ? Icon(
                               Icons.done,
                               color: Colors.green,
@@ -194,7 +194,7 @@ class _ZipResultViewState extends State<ZipResultView> {
                                 color: _zipService.zipResult[index].certificate != null ? AppColors.btColor : AppColors.secondTextColor,
                               ),
                               onPressed: _zipService.zipResult[index].certificate != null ? () {
-                                print('Pressed!');
+                                _zipService.copyOneUser(index);
                               } : null,
                             ),
                           ],
@@ -257,7 +257,7 @@ class _ZipResultViewState extends State<ZipResultView> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: KButton(
-                      text: 'Create Zip',
+                      text: 'Copy All',
                       onPressed: () {
                         _zipService.zipAllFiles();
                       },

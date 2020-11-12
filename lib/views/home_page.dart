@@ -4,7 +4,9 @@ import 'package:e9pass_manager/views/create_pdfs_view.dart';
 import 'package:e9pass_manager/views/zip_archive_create_view.dart';
 import 'package:e9pass_manager/widgets/app_main_logo.dart';
 import 'package:e9pass_manager/widgets/drower_button.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,6 +17,15 @@ class _HomePageState extends State<HomePage> {
   PageController _pageController = PageController(initialPage: 0);
   double currentPageValue;
   List<bool> selectedPage = [false, false, false];
+
+  launchURL() async {
+    const url = 'https://github.com/ishangavidusha';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+    }
+  }
 
   @override
   void initState() {
@@ -38,9 +49,10 @@ class _HomePageState extends State<HomePage> {
             width: 200,
             height: devHeight,
             decoration: BoxDecoration(
+              color: AppColors.bgColor,
               border: Border(
                 right: BorderSide(
-                  color: AppColors.secondTextColor
+                  color: AppColors.textColor
                 )
               )
             ),
@@ -59,23 +71,53 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     _pageController.jumpToPage(0);
                   },
-                  text: 'Search Certificates',
+                  text: 'Create PDFs', 
                   selected: selectedPage[0],
                 ),
                 DrowerButton(
                   onPressed: () {
                     _pageController.jumpToPage(1);
                   },
-                  text: 'Create PDFs',
+                  text: 'Search Certificates',
                   selected: selectedPage[1],
                 ),
                 DrowerButton(
                   onPressed: () {
                     _pageController.jumpToPage(2);
                   },
-                  text: 'Zip Maker',
+                  text: 'Bulk Search',
                   selected: selectedPage[2],
-                )
+                ),
+                Spacer(),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        color: AppColors.textColor,
+                        letterSpacing: 1.2,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(text: 'Developed by '),
+                        TextSpan(
+                          text: 'Ishanga',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            color: Colors.blue,
+                            letterSpacing: 1.2,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              launchURL();
+                            }
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             )
           ),
@@ -95,8 +137,8 @@ class _HomePageState extends State<HomePage> {
                 });
               },
               children: [
-                CertSearchView(),
                 CreatePDFs(),
+                CertSearchView(),
                 ZipCreatView()
               ],
             ),

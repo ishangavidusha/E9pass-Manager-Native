@@ -5,14 +5,14 @@ class KLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset('assets/icons/logo.png', scale: 8,),
+          Image.asset('assets/icons/logo.png', scale: 2.4,),
           SizedBox(
-            width: 10,
+            width: 5,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +27,7 @@ class KLogo extends StatelessWidget {
                 ),
               ),
               Text(
-                'Manager 0.0.1',
+                'Manager 1.0.0',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 12,

@@ -21,24 +21,28 @@ Excel readExcelFile(String path) {
 }
 
 List<PdfFile> processPdf(String path) {
-  List<FileSystemEntity> fileSystemEntityList = Directory(path).listSync(recursive: true).toList();
-  List<PdfFile> pdfFiles = List();
-  fileSystemEntityList.forEach((FileSystemEntity fileSystemEntity) {
-    if (FileSystemEntity.isFileSync(fileSystemEntity.path)) {
-      if (p.split(fileSystemEntity.absolute.path).last.split('.').last == 'pdf') {
-        final appNumber = getAppNumber(p.split(fileSystemEntity.absolute.path).last);
-        if (appNumber != null) {
-          pdfFiles.add(
-            PdfFile(
-              appNumber: appNumber,
-              path: fileSystemEntity.absolute.path,
-            )
-          );
+  if (path != null && path.length > 0) {
+    List<FileSystemEntity> fileSystemEntityList = Directory(path).listSync(recursive: true).toList();
+    List<PdfFile> pdfFiles = List();
+    fileSystemEntityList.forEach((FileSystemEntity fileSystemEntity) {
+      if (FileSystemEntity.isFileSync(fileSystemEntity.path)) {
+        if (p.split(fileSystemEntity.absolute.path).last.split('.').last == 'pdf') {
+          final appNumber = getAppNumber(p.split(fileSystemEntity.absolute.path).last);
+          if (appNumber != null) {
+            pdfFiles.add(
+              PdfFile(
+                appNumber: appNumber,
+                path: fileSystemEntity.absolute.path,
+              )
+            );
+          }
         }
       }
-    }
-  });
-  return pdfFiles;
+    });
+    return pdfFiles;
+  } else {
+    return List();
+  }
 }
 
 String getAppNumber(String fileName) {
@@ -84,17 +88,22 @@ String getCertName(String folderName) {
   return folderName.split(',').first.split('=').elementAt(1);
 }
 
-bool addToArchive(Map<String, dynamic> data) {
-  ZipFileEncoder zipFileEncoder = ZipFileEncoder();
+bool copyUser(Map<String, dynamic> data) {
   ZipResult zipResult = data['data'];
   String path = data['path'];
-  zipFileEncoder.create(p.join(path, '${zipResult.arcNumber}.zip'));
-  zipFileEncoder.addDirectory(Directory(zipResult.certificate.path)); // Problem is here
-  if (zipResult.pdfFile != null) {
-    zipFileEncoder.addFile(File(zipResult.pdfFile.path));
+  Directory directory = Directory(p.join(path, p.split(zipResult.certificate.path).last));
+  try {
+    if (!directory.existsSync()) {
+      directory.createSync(recursive: true);
+    }
+    zipResult.certificate.files.forEach((element) {
+      File(element.path).copySync(p.join(directory.path, element.name));
+    });
+    return true;
+  } on FileSystemException catch (e) {
+    print(e.toString());
+    return false;
   }
-  zipFileEncoder.close();
-  return true;
 }
 
 class ZipService with ChangeNotifier {
@@ -141,6 +150,26 @@ class ZipService with ChangeNotifier {
     }
   }
 
+  Future copyOneUser(int index) async {
+    ziping = true;
+    notifyListeners();
+    FileChooserResult fileChooserResult = await showOpenPanel(
+      canSelectDirectories: true,
+    );
+    if (!fileChooserResult.canceled) {
+      if (zipResult[index].certificate != null) {
+        Map<String, dynamic> data = {'path' : fileChooserResult.paths[0], 'data' : zipResult[index]};
+        bool result = await compute(copyUser, data);
+        print(zipResult[index].userName);
+        zipingStatus = zipResult[index].userName;
+        notifyListeners();
+      }
+    }
+    ziping = false;
+    zipingStatus = '';
+    notifyListeners();
+  }
+
   Future zipAllFiles() async {
     ziping = true;
     notifyListeners();
@@ -151,7 +180,7 @@ class ZipService with ChangeNotifier {
       for (var i = 0; i < zipResult.length; i++) {
         if (zipResult[i].certificate != null) {
           Map<String, dynamic> data = {'path' : fileChooserResult.paths[0], 'data' : zipResult[i]};
-          bool result = await compute(addToArchive, data);
+          bool result = await compute(copyUser, data);
           print(zipResult[i].userName);
           zipingStatus = zipResult[i].userName;
           notifyListeners();

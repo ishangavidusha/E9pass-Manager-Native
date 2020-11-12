@@ -11,8 +11,12 @@
   
   E9pass Manager Native Windows Application
 
+  *This application is designed to do some specific work that required for the client company.*
+
   ## Screen Shot
 
+  ![](screen_shots/loading.PNG)
+  ![](screen_shots/main.PNG)
   ![](screen_shots/zipView.PNG)
 
   ## Table of Contents

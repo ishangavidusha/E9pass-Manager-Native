@@ -42,7 +42,7 @@ class _ZipCreatViewState extends State<ZipCreatView> {
               child: Row(
                 children: [
                   Text(
-                    'Zip Archive Maker',
+                    'Certificate Bulk Search',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 22,
@@ -345,66 +345,66 @@ class _ZipCreatViewState extends State<ZipCreatView> {
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              width: devWidth * 0.7,
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0xFFFFC200).withOpacity(0.2),
-                          blurRadius: 10,
-                          spreadRadius: 4,
-                          offset: Offset(0, 4)
-                        )
-                      ]
-                    ),
-                    child: Image.asset('assets/icons/042-folder.png', scale: 16),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Folder Containing PDF Files',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          letterSpacing: 1.2,
-                          color: AppColors.textColor
-                        ),
-                      ),
-                      SizedBox(
-                        width: 250,
-                        child: Text(
-                          _zipService.pdfFolder ?? 'Not Selected',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10,
-                            letterSpacing: 1.2,
-                            color: _zipService.pdfFolder != null ? AppColors.textColor : AppColors.selectedBtColor
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  KButton(
-                    onPressed: () {
-                      _zipService.getFolderPath(true);
-                    },
-                    text: 'Select Folder',
-                    selected: false,
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            //   width: devWidth * 0.7,
+            //   child: Row(
+            //     children: [
+            //       Container(
+            //         decoration: BoxDecoration(
+            //           boxShadow: [
+            //             BoxShadow(
+            //               color: Color(0xFFFFC200).withOpacity(0.2),
+            //               blurRadius: 10,
+            //               spreadRadius: 4,
+            //               offset: Offset(0, 4)
+            //             )
+            //           ]
+            //         ),
+            //         child: Image.asset('assets/icons/042-folder.png', scale: 16),
+            //       ),
+            //       SizedBox(
+            //         width: 10,
+            //       ),
+            //       Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           Text(
+            //             'Folder Containing PDF Files',
+            //             style: TextStyle(
+            //               fontWeight: FontWeight.bold,
+            //               fontSize: 16,
+            //               letterSpacing: 1.2,
+            //               color: AppColors.textColor
+            //             ),
+            //           ),
+            //           SizedBox(
+            //             width: 250,
+            //             child: Text(
+            //               _zipService.pdfFolder ?? 'Not Selected',
+            //               style: TextStyle(
+            //                 fontWeight: FontWeight.bold,
+            //                 fontSize: 10,
+            //                 letterSpacing: 1.2,
+            //                 color: _zipService.pdfFolder != null ? AppColors.textColor : AppColors.selectedBtColor
+            //               ),
+            //               overflow: TextOverflow.ellipsis,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //       Spacer(),
+            //       KButton(
+            //         onPressed: () {
+            //           _zipService.getFolderPath(true);
+            //         },
+            //         text: 'Select Folder',
+            //         selected: false,
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
