@@ -6,6 +6,7 @@ import 'package:e9pass_manager/views/image_edit_view.dart';
 import 'package:e9pass_manager/widgets/get_files_ui.dart';
 import 'package:e9pass_manager/widgets/kbutton.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -188,9 +189,9 @@ class _CreatePDFsState extends State<CreatePDFs> {
           Divider(color: AppColors.secondTextColor,),
           Expanded(
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: (devWidth ~/ 100) - 2,
-                childAspectRatio: 1.4
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200,
+                childAspectRatio: 1.5,
               ),
               itemCount: _fileService.pickedImages.isNotEmpty ? _fileService.pickedImages.length : 0,
               itemBuilder: (context, index) {
@@ -210,6 +211,8 @@ class _CreatePDFsState extends State<CreatePDFs> {
                       );
                       if (edited) {
                         _fileService.pickedImages[index].bytes = Provider.of<ImageService>(context, listen: false).getImage();
+                        _fileService.pickedImages[index].name = Provider.of<ImageService>(context, listen: false).name;
+                        _fileService.pickedImages[index].arcNumber = Provider.of<ImageService>(context, listen: false).arc;
                         _fileService.pickedImages[index].raw = false;
                       } else {
                         _fileService.pickedImages[index].bytes = Provider.of<ImageService>(context, listen: false).getOriginal();
@@ -219,19 +222,64 @@ class _CreatePDFsState extends State<CreatePDFs> {
                         loading = false;
                       });
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white30,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          width: 2,
-                          color: _fileService.pickedImages[index].raw ? Color(0xff6e5ced) : Colors.red
-                        )
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.memory(_fileService.pickedImages[index].bytes, fit: BoxFit.cover,),
-                      ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 0,
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white30,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                width: 2,
+                                color: _fileService.pickedImages[index].raw ? Color(0xff6e5ced) : Colors.red
+                              )
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.memory(_fileService.pickedImages[index].bytes, fit: BoxFit.cover,),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10),
+                              ),
+                              color: Colors.black.withOpacity(0.6),
+                            ),
+                            child: Column(
+                              children: [
+                                Text(
+                                  _fileService.pickedImages[index].name,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: AppColors.bgColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  _fileService.pickedImages[index].arcNumber,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: AppColors.bgColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   )
                 );

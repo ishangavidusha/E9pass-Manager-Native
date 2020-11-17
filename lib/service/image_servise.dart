@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as im;
 import 'package:flutter/material.dart';
 
-im.Image readImage(Uint8List uint8list) {
-  im.Image image = im.decodeImage(uint8list);
+im.Image readImage(ArcImage arcImage) {
+  im.Image image = im.decodeImage(arcImage.bytes);
   image = im.bakeOrientation(image);
   return image;
 }
@@ -25,12 +25,16 @@ im.Image resizeEngin(Map<String, dynamic> data) {
 class ImageService with ChangeNotifier {
   im.Image _image;
   im.Image _original;
+  String _name;
+  String _arc;
   int _width;
   int _height;
   bool _loading = false;
 
   Future setImage(ArcImage arcImage) async {
-    _original = await compute(readImage, arcImage.bytes);
+    _original = await compute(readImage, arcImage);
+    _name = arcImage.name;
+    _arc = arcImage.arcNumber;
     _image = _original;
     _width = _image.width;
     _height = _image.height;
@@ -40,6 +44,18 @@ class ImageService with ChangeNotifier {
   int get width => _width == null ? 0 : _width;
   int get height => _height == null ? 0 : _height;
   bool get loading => _loading;
+  String get name => _name == null ? '' : _name;
+  String get arc => _arc == null ? '' : _arc;
+
+  void onNameChange(String name) {
+    _name = name;
+    notifyListeners();
+  }
+
+  void onArcChange(String arc) {
+    _arc = arc;
+    notifyListeners();
+  }
 
   Uint8List getImage() {
     return im.encodeJpg(_image);
@@ -60,6 +76,8 @@ class ImageService with ChangeNotifier {
     working(true);
     _image = null;
     _image = null;
+    _name = null;
+    _arc = null;
     working(false);
   }
 

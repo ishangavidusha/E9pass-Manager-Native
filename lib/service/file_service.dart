@@ -8,6 +8,7 @@ import 'package:file_chooser/file_chooser.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
+import 'package:string_validator/string_validator.dart';
 
 List<FileSystemEntity> readDir(String path) {
   return Directory(path).listSync(recursive: true).toList();
@@ -34,15 +35,13 @@ bool copyCertificate(Map<String, dynamic> data) {
 List<ArcImage> readImages(FileChooserResult result) {
   List<ArcImage> data = List();
   result.paths.forEach((element) {
-    String name = getName(element);
     File file = File(element);
-    Uint8List bytes = file.readAsBytesSync();
     data.add(
       ArcImage(
-        bytes: bytes,
+        bytes: file.readAsBytesSync(),
         raw: true,
-        arcNumber: '',
-        name: name ?? ''
+        arcNumber: getArc(element) ?? '',
+        name: getName(element) ?? ''
       ),
     );
   });
@@ -77,13 +76,46 @@ String getCertName(String folderName) {
   return folderName.split(',').first.split('=').elementAt(1);
 }
 
-String getName(String fileName) {
-    try {
-      return fileName.split('_').elementAt(1);
-    } on RangeError {
+String getArc(String path ) {
+  try {
+    String fileName = p.split(path).last.split('.').first;
+    List<String> names = fileName.split('_');
+    if (names.length > 0) {
+      String checkArc = names.firstWhere((element) => isNumeric(element.replaceAll(' ', '').replaceAll('-', '')) && element.length == 13, orElse: () => null);
+      if (checkArc == null) {
+        String idNumber = names.firstWhere((element) => isAlphanumeric(element.replaceAll(' ', '')) && element.length == 7, orElse: () => null);
+        if (idNumber != null) {
+          return isNumeric(idNumber.substring(1)) ? idNumber : null;
+        } else {
+          return idNumber;
+        }
+      } else {
+        return checkArc;
+      }
+    } else {
       return null;
     }
+  } catch (e) {
+    print(e);
+    return null;
   }
+}
+
+String getName(String path) {
+  try {
+    String fileName = p.split(path).last.split('.').first;
+    print(fileName);
+    List<String> names = fileName.split('_');
+    if (names.length > 0) {
+      return names.firstWhere((element) => isAlpha(element.replaceAll(' ', '')) && isUppercase(element), orElse: () => null,);
+    } else {
+      return null;
+    }
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
 
 class FileService with ChangeNotifier {
   List<Certificate> selectedDirCert = List();
