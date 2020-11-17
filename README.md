@@ -1,9 +1,6 @@
 # E9pass Manager Native
 
-  ![Badge for GitHub repo top language](https://img.shields.io/github/languages/top/ishangavidusha/E9pass-Manager-Native?style=flat&logo=appveyor) ![Badge for GitHub last commit](https://img.shields.io/github/last-commit/ishangavidusha/E9pass-Manager-Native?style=flat&logo=appveyor)
-  
-  Check out the badges hosted by [shields.io](https://shields.io/).
-  
+  ![Badge for GitHub repo top language](https://img.shields.io/github/languages/top/ishangavidusha/E9pass-Manager-Native?style=flat&logo=appveyor) ![Badge for GitHub last commit](https://img.shields.io/github/last-commit/ishangavidusha/E9pass-Manager-Native?style=flat&logo=appveyor) [![GitHub issues](https://img.shields.io/github/issues/ishangavidusha/E9pass-Manager-Native)](https://github.com/ishangavidusha/E9pass-Manager-Native/issues) [![Powered by](https://img.shields.io/badge/Flutter-Windows-blue?style=flat&logo=flutter)](https://flutter.dev/) 
   
   ## Description 
   
