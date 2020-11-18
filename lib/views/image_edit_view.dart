@@ -16,6 +16,9 @@ class _ImageEditViewState extends State<ImageEditView> {
   ImageService _imageService;
   bool _cropping = false;
   double widthValue;
+  String _name = '';
+  String _arcNumber = '';
+  int fistbuild = 1;
 
   Future<void> cropImage() async {
     if (_cropping) {
@@ -36,8 +39,11 @@ class _ImageEditViewState extends State<ImageEditView> {
     double devWidth = MediaQuery.of(context).size.width;
     _imageService = Provider.of<ImageService>(context);
     widthValue ??= _imageService.width.toDouble() ?? 0.0;
-    textEditingControllerName.value = TextEditingValue(text: _imageService.name);
-    textEditingControllerArc.value = TextEditingValue(text: _imageService.arc);
+    if (fistbuild == 1) {
+      textEditingControllerName.value = TextEditingValue(text: _imageService.name);
+      textEditingControllerArc.value = TextEditingValue(text: _imageService.arc);
+      fistbuild++;
+    }
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -136,17 +142,6 @@ class _ImageEditViewState extends State<ImageEditView> {
                               color: AppColors.secondTextColor
                             ),
                           ),
-                          onChanged: (value) {
-
-                          },
-                          onEditingComplete: () {
-                            
-                          },
-                          onSubmitted: (value) {
-                            print(value);
-                            _imageService.onArcChange(value);
-                            FocusScope.of(context).requestFocus(new FocusNode());
-                          },
                         ),
                       ),
                       SizedBox(
@@ -171,17 +166,6 @@ class _ImageEditViewState extends State<ImageEditView> {
                               color: AppColors.secondTextColor
                             ),
                           ),
-                          onChanged: (value) {
-                            
-                          },
-                          onEditingComplete: () {
-                            
-                          },
-                          onSubmitted: (value) {
-                            print(value);
-                            _imageService.onNameChange(value);
-                            FocusScope.of(context).requestFocus(new FocusNode());
-                          },
                         ),
                       ),
                     ],
@@ -294,6 +278,9 @@ class _ImageEditViewState extends State<ImageEditView> {
                         ),
                         RaisedButton(
                           onPressed: () async {
+                            FocusScope.of(context).requestFocus(new FocusNode());
+                            _imageService.onNameChange(textEditingControllerName.text);
+                            _imageService.onArcChange(textEditingControllerArc.text);
                             Navigator.pop(context, true);
                           },
                           color: AppColors.btColor,

@@ -83,7 +83,7 @@ String getArc(String path ) {
     if (names.length > 0) {
       String checkArc = names.firstWhere((element) => isNumeric(element.replaceAll(' ', '').replaceAll('-', '')) && element.length == 13, orElse: () => null);
       if (checkArc == null) {
-        String idNumber = names.firstWhere((element) => isAlphanumeric(element.replaceAll(' ', '')) && element.length == 7, orElse: () => null);
+        String idNumber = names.firstWhere((element) => isAlphanumeric(element.replaceAll(' ', '')) && element.length == 8, orElse: () => null);
         if (idNumber != null) {
           return isNumeric(idNumber.substring(1)) ? idNumber : null;
         } else {
