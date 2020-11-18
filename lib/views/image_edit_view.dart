@@ -16,8 +16,6 @@ class _ImageEditViewState extends State<ImageEditView> {
   ImageService _imageService;
   bool _cropping = false;
   double widthValue;
-  String _name = '';
-  String _arcNumber = '';
   int fistbuild = 1;
 
   Future<void> cropImage() async {

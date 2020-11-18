@@ -6,7 +6,6 @@ import 'package:e9pass_manager/views/image_edit_view.dart';
 import 'package:e9pass_manager/widgets/get_files_ui.dart';
 import 'package:e9pass_manager/widgets/kbutton.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

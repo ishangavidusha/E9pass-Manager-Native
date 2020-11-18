@@ -1,8 +1,6 @@
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'package:archive/archive_io.dart';
 import 'package:e9pass_manager/models/certModel.dart';
 import 'package:e9pass_manager/models/enums.dart';
 import 'package:e9pass_manager/models/excelSheetModel.dart';
@@ -159,7 +157,7 @@ class ZipService with ChangeNotifier {
     if (!fileChooserResult.canceled) {
       if (zipResult[index].certificate != null) {
         Map<String, dynamic> data = {'path' : fileChooserResult.paths[0], 'data' : zipResult[index]};
-        bool result = await compute(copyUser, data);
+        await compute(copyUser, data);
         print(zipResult[index].userName);
         zipingStatus = zipResult[index].userName;
         notifyListeners();
@@ -180,7 +178,7 @@ class ZipService with ChangeNotifier {
       for (var i = 0; i < zipResult.length; i++) {
         if (zipResult[i].certificate != null) {
           Map<String, dynamic> data = {'path' : fileChooserResult.paths[0], 'data' : zipResult[i]};
-          bool result = await compute(copyUser, data);
+          await compute(copyUser, data);
           print(zipResult[i].userName);
           zipingStatus = zipResult[i].userName;
           notifyListeners();

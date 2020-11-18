@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:e9pass_manager/service/zip_service.dart';
 import 'package:e9pass_manager/utils/my_colors.dart';

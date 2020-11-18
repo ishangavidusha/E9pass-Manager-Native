@@ -19,7 +19,6 @@ class PdfFactory {
       String phoneNumber = '';
       String appNumber = '';
       String arcNumber = element.arcNumber;
-      DateTime dateTime = DateTime.now();
       name = name != null && name.length > 0 ? name : '';
       phoneNumber = phoneNumber != null && phoneNumber.length > 0 ? phoneNumber : '';
       appNumber = appNumber != null && appNumber.length > 0 ? appNumber : '';
@@ -154,7 +153,7 @@ class PdfFactory {
                         height: 15,
                       ),
                       pw.Text(
-                        '${dateTime.year}  년  ${dateTime.month}  월  ${dateTime.day}  일',
+                        '          년        월        일',
                         style: pw.TextStyle(
                           fontSize: 12,
                           font: kFont,
