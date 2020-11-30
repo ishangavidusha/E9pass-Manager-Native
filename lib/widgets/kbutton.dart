@@ -6,7 +6,7 @@ class KButton extends StatelessWidget {
   final String text;
   final bool selected;
 
-  const KButton({Key key, this.onPressed, this.text, this.selected = false}) : super(key: key);
+  const KButton({Key key, this.onPressed, this.text, this.selected = false }) : super(key: key);
 
 
   @override
@@ -43,6 +43,75 @@ class KButton extends StatelessWidget {
           disabledColor: AppColors.secondTextColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class KButtonWithAnimation extends StatefulWidget {
+  final Function onPressed;
+  final String text;
+  final bool selected;
+  final Function onPointerHover;
+
+  const KButtonWithAnimation({Key key, this.onPressed, this.text, this.selected = false, this.onPointerHover }) : super(key: key);
+
+  @override
+  _KButtonWithAnimationState createState() => _KButtonWithAnimationState();
+}
+
+class _KButtonWithAnimationState extends State<KButtonWithAnimation> {
+  bool selected = false;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200,
+      height: 60,
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: MouseRegion(
+        onEnter: (event) {
+          widget.onPointerHover(true);
+          setState(() {
+            selected = true;
+          });
+        },
+        onExit: (event) {
+          widget.onPointerHover(false);
+          setState(() {
+            selected = false;
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: selected ? AppColors.selectedBtColor.withOpacity(0.4) : AppColors.btColor.withOpacity(0.4),
+                spreadRadius: 4,
+                blurRadius: 10,
+                offset: Offset(0, 6)
+              )
+            ]
+          ),
+          child: FlatButton(
+            onPressed: widget.onPressed,
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 12,
+                letterSpacing: 1.2,
+              ),
+            ),
+            textTheme: ButtonTextTheme.primary,
+            textColor: AppColors.bgColor,
+            color:selected ? AppColors.selectedBtColor : AppColors.btColor,
+            clipBehavior: Clip.antiAlias,
+            disabledColor: AppColors.secondTextColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10)
+            ),
           ),
         ),
       ),
