@@ -85,7 +85,6 @@ String getArc(String path ) {
       if (checkArc == null) {
         String idNumber = names.firstWhere((element) => isAlphanumeric(element.replaceAll(' ', '')) && element.length == 8, orElse: () => null);
         if (idNumber != null) {
-          print(idNumber.substring(0, 1));
           return isNumeric(idNumber.substring(1)) && isAlpha(idNumber.substring(0, 1)) ? idNumber : null;
         } else {
           return idNumber;
@@ -108,7 +107,12 @@ String getName(String path) {
     // print(fileName);
     List<String> names = fileName.split('_');
     if (names.length > 0) {
-      return names.firstWhere((element) => isAlpha(element.replaceAll(' ', '')) && isUppercase(element), orElse: () => null,);
+      String name =  names.firstWhere((element) => isAlpha(element.replaceAll(' ', '')) && isUppercase(element), orElse: () => null,);
+      if (name != null) {
+        name = name.replaceFirst(RegExp(r"^\s+"), "");
+        name = name.replaceFirst(RegExp(r"\s+$"), "");
+      }
+      return name;
     } else {
       return null;
     }
@@ -145,10 +149,10 @@ class FileService with ChangeNotifier {
     );
     if (result.canceled != true) {
       pickedImages.addAll(await compute(readImages, result));
+      pickedImages.sort((a, b) => a.name.characters.first.compareTo(b.name.characters.first));
       notifyListeners();
       return true;
     } else {
-      // pickedImages = List();
       notifyListeners();
       return false;
     }
