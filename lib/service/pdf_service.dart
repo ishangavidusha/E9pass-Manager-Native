@@ -68,17 +68,17 @@ class PdfFactory {
                       pw.SizedBox(
                         height: 5,
                       ),
-                      pw.Text('APPLICATION NO : $appNumber',
-                        style: pw.TextStyle(
-                          fontSize: 12,
-                          font: myFont,
-                          fontWeight: pw.FontWeight.bold,
-                          color: PdfColor.fromHex('#1C1C1C'),
-                        ),
-                      ),
-                      pw.SizedBox(
-                        height: 5,
-                      ),
+                      // pw.Text('APPLICATION NO : $appNumber',
+                      //   style: pw.TextStyle(
+                      //     fontSize: 12,
+                      //     font: myFont,
+                      //     fontWeight: pw.FontWeight.bold,
+                      //     color: PdfColor.fromHex('#1C1C1C'),
+                      //   ),
+                      // ),
+                      // pw.SizedBox(
+                      //   height: 5,
+                      // ),
                       pw.Row(
                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
