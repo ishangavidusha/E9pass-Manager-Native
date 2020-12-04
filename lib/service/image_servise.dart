@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:e9pass_manager/models/arcModel.dart';
+import 'package:e9pass_manager/models/erroeModel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as im;
 import 'package:flutter/material.dart';
@@ -31,14 +32,20 @@ class ImageService with ChangeNotifier {
   int _height;
   bool _loading = false;
 
-  Future setImage(ArcImage arcImage) async {
-    _original = await compute(readImage, arcImage);
-    _name = arcImage.name;
-    _arc = arcImage.arcNumber;
-    _image = _original;
-    _width = _image.width;
-    _height = _image.height;
-    notifyListeners();
+  Future<bool> setImage(ArcImage arcImage) async {
+    try {
+      _original = await compute(readImage, arcImage);
+      _original = _original.width > 1000 ? await compute(resizeEngin, {'image' : _original, 'width' : 1000, 'height' : null}) : _original;
+      _name = arcImage.name;
+      _arc = arcImage.arcNumber;
+      _image = _original;
+      _width = _image.width;
+      _height = _image.height;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      throw ErrorMsg(e: e, eMsg: 'Unable to open image ${arcImage.toString()}');
+    }
   }
 
   int get width => _width == null ? 0 : _width;

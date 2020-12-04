@@ -36,10 +36,12 @@ List<ArcImage> readImages(FileChooserResult result) {
   List<ArcImage> data = List();
   result.paths.forEach((element) {
     File file = File(element);
-    data.add(
+    data.add( 
       ArcImage(
         bytes: file.readAsBytesSync(),
+        file: file,
         raw: true,
+        fileName: p.split(file.path).last,
         arcNumber: getArc(element) ?? '',
         name: getName(element) ?? ''
       ),
@@ -140,9 +142,7 @@ class FileService with ChangeNotifier {
         FileTypeFilterGroup(
           label: 'Images',
           fileExtensions: <String> [
-            'jpeg',
             'jpg',
-            'png',
           ]
         )
       ]
@@ -155,6 +155,13 @@ class FileService with ChangeNotifier {
     } else {
       notifyListeners();
       return false;
+    }
+  }
+
+  void removeImage(ArcImage arcImageToRemove) {
+    if (pickedImages.isNotEmpty || pickedImages != null) {
+      pickedImages.remove(arcImageToRemove);
+      notifyListeners();
     }
   }
 

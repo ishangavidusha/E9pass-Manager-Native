@@ -1,3 +1,4 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:e9pass_manager/service/file_service.dart';
 import 'package:e9pass_manager/service/image_servise.dart';
 import 'package:e9pass_manager/service/pdf_service.dart';
@@ -6,7 +7,6 @@ import 'package:e9pass_manager/views/image_edit_view.dart';
 import 'package:e9pass_manager/widgets/get_files_ui.dart';
 import 'package:e9pass_manager/widgets/kbutton.dart';
 import 'package:flutter/material.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/widgets.dart ' as pw;
@@ -117,7 +117,7 @@ class _CreatePDFsState extends State<CreatePDFs> {
                 Transform.scale(
                   scale: 0.8,
                   child: KButton(
-                    text: 'Select Images',
+                    text: 'Select Again',
                     onPressed: () {
                       _fileService.getImageFiles(false);
                     },
@@ -132,49 +132,45 @@ class _CreatePDFsState extends State<CreatePDFs> {
                       setState(() {
                         converting = true;
                       });
-                      pw.Document document = await _pdfFactory.getPdfFileWithStatement(_fileService.pickedImages);
+                      pw.Document document;
+                      try {
+                        document = await _pdfFactory.getPdfFileWithStatement(_fileService.pickedImages);
+                      } catch (e) {
+                        print(e);
+                        CoolAlert.show(
+                          context: context,
+                          type: CoolAlertType.error,
+                          title: 'Something went wrong!',
+                          text: e.toString(),
+                          onConfirmBtnTap: () {
+                            Navigator.of(context).pop();
+                          },
+                        );
+                      }
                       String fileName = DateFormat("yyyyMMddhhmmss").format(DateTime.now());
-                      _fileService.savePdf(document.save(), fileName).then((value) => {
-                        if (value) {
-                          showDialog(
-                            context: context,builder: (_) => FlareGiffyDialog(
-                              flarePath: 'assets/animation/loading-error-and-check.flr',
-                              flareAnimation: 'success',
-                              title: Text('Successfully Saved!',
-                                  style: TextStyle(
-                                  fontSize: 22.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              entryAnimation: EntryAnimation.TOP,
-                              onlyOkButton: true,
-                              cardBackgroundColor: AppColors.secondTextColor,
-                              onOkButtonPressed: () {
-                                Navigator.pop(context);
+                      if (document != null) {
+                        _fileService.savePdf(document.save(), '$fileName-${_fileService.pickedImages.length}').then((value) => {
+                          if (value) {
+                            CoolAlert.show(
+                              context: context,
+                              type: CoolAlertType.success,
+                              title: 'Successfully Saved!',
+                              onConfirmBtnTap: () {
+                                Navigator.of(context).pop();
                               },
-                            )
-                          )
-                        } else {
-                          showDialog(
-                            context: context,builder: (_) => FlareGiffyDialog(
-                              flarePath: 'assets/animation/loading-error-and-check.flr',
-                              flareAnimation: 'failure',
-                              title: Text('Failed to save PDF',
-                                  style: TextStyle(
-                                  fontSize: 22.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              entryAnimation: EntryAnimation.TOP,
-                              onlyOkButton: true,
-                              cardBackgroundColor: AppColors.secondTextColor,
-                              onOkButtonPressed: () {
-                                Navigator.pop(context);
+                            ),
+                          } else {
+                            CoolAlert.show(
+                              context: context,
+                              type: CoolAlertType.error,
+                              title: 'Failed to save PDF',
+                              onConfirmBtnTap: () {
+                                Navigator.of(context).pop();
                               },
-                            )
-                          )
-                        }
-                      });
+                            ),
+                          }
+                        });
+                      }
                       setState(() {
                         converting = false;
                       });
@@ -188,6 +184,7 @@ class _CreatePDFsState extends State<CreatePDFs> {
           Divider(color: AppColors.secondTextColor,),
           Expanded(
             child: GridView.builder(
+              shrinkWrap: true,
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 200,
                 childAspectRatio: 1.5,
@@ -202,20 +199,34 @@ class _CreatePDFsState extends State<CreatePDFs> {
                       setState(() {
                         loading = true;
                       });
-                      Provider.of<ImageService>(context, listen: false).clear();
-                      await Provider.of<ImageService>(context, listen: false).setImage(_fileService.pickedImages[index]);
-                      bool edited = await Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ImageEditView()),
-                      );
-                      if (edited) {
-                        _fileService.pickedImages[index].bytes = Provider.of<ImageService>(context, listen: false).getImage();
-                        _fileService.pickedImages[index].name = Provider.of<ImageService>(context, listen: false).name;
-                        _fileService.pickedImages[index].arcNumber = Provider.of<ImageService>(context, listen: false).arc;
-                        _fileService.pickedImages[index].raw = false;
-                      } else {
-                        _fileService.pickedImages[index].bytes = Provider.of<ImageService>(context, listen: false).getOriginal();
-                        _fileService.pickedImages[index].raw = true;
+                      try {
+                        Provider.of<ImageService>(context, listen: false).clear();
+                        await Provider.of<ImageService>(context, listen: false).setImage(_fileService.pickedImages[index]);
+                        bool edited = await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ImageEditView()),
+                        );
+                        if (edited) {
+                          _fileService.pickedImages[index].bytes = Provider.of<ImageService>(context, listen: false).getImage();
+                          _fileService.pickedImages[index].save();
+                          _fileService.pickedImages[index].name = Provider.of<ImageService>(context, listen: false).name;
+                          _fileService.pickedImages[index].arcNumber = Provider.of<ImageService>(context, listen: false).arc;
+                          _fileService.pickedImages[index].raw = false;
+                        } else {
+                          _fileService.pickedImages[index].bytes = Provider.of<ImageService>(context, listen: false).getOriginal();
+                          _fileService.pickedImages[index].raw = true;
+                        }
+                      } catch (e) {
+                        print(e);
+                        CoolAlert.show(
+                          context: context,
+                          type: CoolAlertType.error,
+                          title: 'Something went wrong!',
+                          text: e.toString(),
+                          onConfirmBtnTap: () {
+                            Navigator.of(context).pop();
+                          },
+                        );
                       }
                       setState(() {
                         loading = false;
@@ -275,6 +286,25 @@ class _CreatePDFsState extends State<CreatePDFs> {
                                   ),
                                 )
                               ],
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Transform.scale(
+                            scale: 0.6,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white
+                              ),
+                              child: IconButton(
+                                icon: Icon(Icons.close, color: AppColors.selectedBtColor),
+                                onPressed: () {
+                                  _fileService.removeImage(_fileService.pickedImages[index]);
+                                },
+                              ),
                             ),
                           ),
                         ),

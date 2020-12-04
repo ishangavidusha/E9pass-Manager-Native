@@ -1,4 +1,5 @@
 import 'package:e9pass_manager/models/arcModel.dart';
+import 'package:e9pass_manager/models/erroeModel.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart ' as pw;
@@ -14,7 +15,12 @@ class PdfFactory {
     var myFont = pw.Font.ttf(data);
     var kFont = pw.Font.ttf(kFontData);
     fileList.forEach((element) {
-      PdfImage arcPdfImage = PdfImage.file(pdf.document, bytes: element.bytes);
+      PdfImage arcPdfImage;
+      try {
+        arcPdfImage = PdfImage.file(pdf.document, bytes: element.bytes);
+      } catch (e) {
+        throw ErrorMsg(e: e, eMsg: 'Unable to read image of ${element.name}');
+      }
       String name = element.name;
       String phoneNumber = '';
       String appNumber = '';
