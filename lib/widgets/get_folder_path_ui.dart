@@ -84,7 +84,7 @@ class _GetFolderUIState extends State<GetFolderUI> with TickerProviderStateMixin
               SizedBox(
                 height: 20,
               ),
-              KButtonWithAnimation(
+              KButton(
                 onPressed: widget.onPressed,
                 text: 'Open Folder',
                 selected: false,

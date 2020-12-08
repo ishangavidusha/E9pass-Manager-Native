@@ -19,10 +19,10 @@ class DrowerButton extends StatelessWidget {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: selected ? AppColors.selectedBtColor.withOpacity(0.4) : AppColors.btColor.withOpacity(0.4),
+              color: selected ? AppColors.selectedBtColor.withOpacity(0.2) : AppColors.btColor.withOpacity(0.2),
               spreadRadius: 4,
               blurRadius: 10,
-              offset: Offset(0, 6)
+              offset: Offset(0, 3)
             )
           ]
         ),

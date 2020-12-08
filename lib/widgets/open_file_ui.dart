@@ -84,7 +84,7 @@ class _OpenFileUIState extends State<OpenFileUI> with TickerProviderStateMixin {
               SizedBox(
                 height: 20,
               ),
-              KButtonWithAnimation(
+              KButton(
                 onPressed: widget.onPressed,
                 text: 'Open File',
                 selected: false,

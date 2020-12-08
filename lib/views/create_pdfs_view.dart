@@ -220,7 +220,6 @@ class _CreatePDFsState extends State<CreatePDFs> {
                           _fileService.pickedImages[index].raw = false;
                         } else {
                           _fileService.pickedImages[index].bytes = Provider.of<ImageService>(context, listen: false).getOriginal();
-                          _fileService.pickedImages[index].raw = true;
                         }
                       } catch (e) {
                         print(e);
@@ -253,7 +252,7 @@ class _CreatePDFsState extends State<CreatePDFs> {
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
                                 width: 2,
-                                color: _fileService.pickedImages[index].raw ? Color(0xff6e5ced) : Colors.red
+                                color: _fileService.pickedImages[index].raw ? AppColors.secondTextColor : Colors.red
                               )
                             ),
                             child: ClipRRect(
