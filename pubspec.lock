@@ -190,13 +190,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  giffy_dialog:
-    dependency: "direct main"
-    description:
-      name: giffy_dialog
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.8.0"
   http:
     dependency: transitive
     description:
@@ -239,13 +232,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3-nullsafety.3"
-  keyboard_shortcuts:
-    dependency: "direct main"
-    description:
-      name: keyboard_shortcuts
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   logging:
     dependency: transitive
     description:
@@ -393,13 +379,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
-  quiver:
-    dependency: transitive
-    description:
-      name: quiver
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.5"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -461,13 +440,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.19-nullsafety.6"
-  tuple:
-    dependency: transitive
-    description:
-      name: tuple
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
   typed_data:
     dependency: transitive
     description:
@@ -531,13 +503,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0-nullsafety.5"
-  visibility_detector:
-    dependency: transitive
-    description:
-      name: visibility_detector
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.5"
   win32:
     dependency: transitive
     description:

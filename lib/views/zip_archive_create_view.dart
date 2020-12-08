@@ -1,10 +1,10 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:e9pass_manager/service/zip_service.dart';
 import 'package:e9pass_manager/utils/my_colors.dart';
 import 'package:e9pass_manager/views/zip_result_view.dart';
 import 'package:e9pass_manager/widgets/kbutton.dart';
 import 'package:e9pass_manager/widgets/open_file_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:provider/provider.dart';
 
 class ZipCreatView extends StatefulWidget {
@@ -129,25 +129,17 @@ class _ZipCreatViewState extends State<ZipCreatView> {
                             MaterialPageRoute(builder: (context) => ZipResultView()),
                           );
                         } else {
-                          showDialog(
-                            context: context,builder: (_) => FlareGiffyDialog(
-                              flarePath: 'assets/animation/loading-error-and-check.flr',
-                              flareAnimation: 'failure',
-                              title: Text(
-                                'Certificate Folder Not Selceted',
-                                  style: TextStyle(
-                                  fontSize: 22.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              entryAnimation: EntryAnimation.TOP,
-                              onlyOkButton: true,
-                              cardBackgroundColor: AppColors.secondTextColor,
-                              onOkButtonPressed: () {
-                                Navigator.pop(context);
-                              },
-                            )
-                          );
+                          //TODO : Change Animation
+                          CoolAlert.show(
+                          context: context,
+                          type: CoolAlertType.warning,
+                          flareAsset: 'assets/flare/warning_check.flr',
+                          title: 'Certificate Folder Not Selceted',
+                          text: 'Please select folder containing certificates',
+                          onConfirmBtnTap: () {
+                            Navigator.of(context).pop();
+                          },
+                        );
                         }
                       },
                       selected: false,

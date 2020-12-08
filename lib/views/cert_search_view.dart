@@ -1,10 +1,10 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:e9pass_manager/service/file_service.dart';
 import 'package:e9pass_manager/utils/my_colors.dart';
 import 'package:e9pass_manager/widgets/get_folder_path_ui.dart';
 import 'package:e9pass_manager/widgets/kbutton.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:provider/provider.dart';
 
 class CertSearchView extends StatefulWidget {
@@ -240,28 +240,15 @@ class _CertSearchViewState extends State<CertSearchView> {
                               _fileService.searchResult[index].selected = true;
                             });
                             bool result = await _fileService.downloadCertificate(_fileService.searchResult[index]);
-                            showDialog(
-                              context: context,builder: (_) => FlareGiffyDialog(
-                                flarePath: 'assets/animation/loading-error-and-check.flr',
-                                flareAnimation: result ? 'success' : 'failure',
-                                title: result ? Text('Successfully Copied!',
-                                    style: TextStyle(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ) : Text('Failed to Copy',
-                                    style: TextStyle(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                entryAnimation: EntryAnimation.TOP,
-                                onlyOkButton: true,
-                                cardBackgroundColor: AppColors.secondTextColor,
-                                onOkButtonPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              )
+                            //TODO : Beter Animation
+                            CoolAlert.show(
+                              context: context,
+                              type: result ? CoolAlertType.success : CoolAlertType.error,
+                              flareAsset: result ? 'assets/flare/success_check.flr' : 'assets/flare/error_check.flr',
+                              title: result ?  'Successfully Copied!' : 'Failed to Copy',
+                              onConfirmBtnTap: () {
+                                Navigator.of(context).pop();
+                              },
                             );
                             setState(() {
                               _fileService.searchResult[index].selected = false;

@@ -110,10 +110,7 @@ String getName(String path) {
     List<String> names = fileName.split('_');
     if (names.length > 0) {
       String name =  names.firstWhere((element) => isAlpha(element.replaceAll(' ', '')) && isUppercase(element), orElse: () => null,);
-      if (name != null) {
-        name = name.replaceFirst(RegExp(r"^\s+"), "");
-        name = name.replaceFirst(RegExp(r"\s+$"), "");
-      }
+      name = name != null ? name.trim() : name;
       return name;
     } else {
       return null;
@@ -149,7 +146,7 @@ class FileService with ChangeNotifier {
     );
     if (result.canceled != true) {
       pickedImages.addAll(await compute(readImages, result));
-      pickedImages.sort((a, b) => a.name.characters.first.compareTo(b.name.characters.first));
+      pickedImages.sort((a, b) => a.name.compareTo(b.name));
       notifyListeners();
       return true;
     } else {

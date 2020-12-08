@@ -137,9 +137,11 @@ class _CreatePDFsState extends State<CreatePDFs> {
                         document = await _pdfFactory.getPdfFileWithStatement(_fileService.pickedImages);
                       } catch (e) {
                         print(e);
+                        //TODO : Change Animation
                         CoolAlert.show(
                           context: context,
                           type: CoolAlertType.error,
+                          flareAsset: 'assets/flare/error_check.flr',
                           title: 'Something went wrong!',
                           text: e.toString(),
                           onConfirmBtnTap: () {
@@ -151,18 +153,22 @@ class _CreatePDFsState extends State<CreatePDFs> {
                       if (document != null) {
                         _fileService.savePdf(document.save(), '$fileName-${_fileService.pickedImages.length}').then((value) => {
                           if (value) {
+                            //TODO : Change Animation
                             CoolAlert.show(
                               context: context,
                               type: CoolAlertType.success,
+                              flareAsset: 'assets/flare/success_check.flr',
                               title: 'Successfully Saved!',
                               onConfirmBtnTap: () {
                                 Navigator.of(context).pop();
                               },
                             ),
                           } else {
+                            //TODO : Change Animation
                             CoolAlert.show(
                               context: context,
                               type: CoolAlertType.error,
+                              flareAsset: 'assets/flare/error_check.flr',
                               title: 'Failed to save PDF',
                               onConfirmBtnTap: () {
                                 Navigator.of(context).pop();
@@ -218,9 +224,11 @@ class _CreatePDFsState extends State<CreatePDFs> {
                         }
                       } catch (e) {
                         print(e);
+                        //TODO : Change Animation
                         CoolAlert.show(
                           context: context,
                           type: CoolAlertType.error,
+                          flareAsset: 'assets/flare/error_check.flr',
                           title: 'Something went wrong!',
                           text: e.toString(),
                           onConfirmBtnTap: () {
