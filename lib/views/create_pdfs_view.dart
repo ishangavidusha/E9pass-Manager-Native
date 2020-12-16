@@ -8,6 +8,7 @@ import 'package:e9pass_manager/widgets/get_files_ui.dart';
 import 'package:e9pass_manager/widgets/kbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/widgets.dart ' as pw;
 
@@ -21,6 +22,71 @@ class _CreatePDFsState extends State<CreatePDFs> {
   PdfFactory _pdfFactory = PdfFactory();
   bool loading = false;
   bool converting = false;
+  double footerMargin = 5;
+  double footerThikness = 15;
+
+  Future _getPdfSettings(double devWidth, double devHeight) async {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+            width: devWidth * 0.5,
+            height: devHeight * 0.6,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Footer Margin',
+                      style: TextStyle(
+                        color: AppColors.textColor,
+                      ),
+                    ),
+                    Spacer(),
+                    NumberPicker.integer(
+                      scrollDirection: Axis.horizontal,
+                      highlightSelectedValue: false,
+                      initialValue: footerMargin.toInt(), 
+                      minValue: 0, 
+                      maxValue: 20, 
+                      onChanged: (value) {
+                        setState(() {
+                          footerMargin = value.toDouble();
+                        });
+                      }
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    KButton(
+                      text: 'Cancel',
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      selected: true,
+                    ),
+                    KButton(
+                      text: 'Done',
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double devWidth = MediaQuery.of(context).size.width - 200;
@@ -132,50 +198,53 @@ class _CreatePDFsState extends State<CreatePDFs> {
                       setState(() {
                         converting = true;
                       });
-                      pw.Document document;
-                      try {
-                        document = await _pdfFactory.getPdfFileWithStatement(_fileService.pickedImages);
-                      } catch (e) {
-                        print(e);
-                        //TODO : Change Animation
-                        CoolAlert.show(
-                          context: context,
-                          type: CoolAlertType.error,
-                          flareAsset: 'assets/flare/error_check.flr',
-                          title: 'Something went wrong!',
-                          text: e.toString(),
-                          onConfirmBtnTap: () {
-                            Navigator.of(context).pop();
-                          },
-                        );
-                      }
-                      String fileName = DateFormat("yyyyMMddhhmmss").format(DateTime.now());
-                      if (document != null) {
-                        _fileService.savePdf(document.save(), '$fileName-${_fileService.pickedImages.length}').then((value) => {
-                          if (value) {
-                            //TODO : Change Animation
-                            CoolAlert.show(
-                              context: context,
-                              type: CoolAlertType.success,
-                              flareAsset: 'assets/flare/success_check.flr',
-                              title: 'Successfully Saved!',
-                              onConfirmBtnTap: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          } else {
-                            //TODO : Change Animation
-                            CoolAlert.show(
-                              context: context,
-                              type: CoolAlertType.error,
-                              flareAsset: 'assets/flare/error_check.flr',
-                              title: 'Failed to save PDF',
-                              onConfirmBtnTap: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          }
-                        });
+                      bool dialogResult = await _getPdfSettings(devWidth, devHeight);
+                      if (dialogResult) {
+                        pw.Document document;
+                        try {
+                          document = await _pdfFactory.getPdfFileWithStatement(_fileService.pickedImages);
+                        } catch (e) {
+                          print(e);
+                          //TODO : Change Animation
+                          CoolAlert.show(
+                            context: context,
+                            type: CoolAlertType.error,
+                            flareAsset: 'assets/flare/error_check.flr',
+                            title: 'Something went wrong!',
+                            text: e.toString(),
+                            onConfirmBtnTap: () {
+                              Navigator.of(context).pop();
+                            },
+                          );
+                        }
+                        String fileName = DateFormat("yyyyMMddhhmmss").format(DateTime.now());
+                        if (document != null) {
+                          _fileService.savePdf(document.save(), '$fileName-${_fileService.pickedImages.length}').then((value) => {
+                            if (value) {
+                              //TODO : Change Animation
+                              CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.success,
+                                flareAsset: 'assets/flare/success_check.flr',
+                                title: 'Successfully Saved!',
+                                onConfirmBtnTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            } else {
+                              //TODO : Change Animation
+                              CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.error,
+                                flareAsset: 'assets/flare/error_check.flr',
+                                title: 'Failed to save PDF',
+                                onConfirmBtnTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            }
+                          });
+                        }
                       }
                       setState(() {
                         converting = false;

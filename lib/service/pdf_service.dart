@@ -34,7 +34,28 @@ class PdfFactory {
 
       pdf.addPage(
         pw.Page(
-          pageFormat: PdfPageFormat.a4,
+          pageTheme: pw.PageTheme(
+            pageFormat: PdfPageFormat.a4,
+            buildBackground: (context) => pw.FullPage(
+              ignoreMargins: true,
+              child: pw.Stack(
+                children: [
+                  pw.Positioned(
+                    bottom: 5,
+                    left: 0,
+                    right: 0,
+                    child: pw.Container(
+                      height: 10,
+                      width: PdfPageFormat.a4.width / 2,
+                      decoration: pw.BoxDecoration(
+                        color: PdfColor.fromHex('#404040')
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ),
           build: (pw.Context context) {
             return pw.Column(
               mainAxisAlignment: pw.MainAxisAlignment.start,
