@@ -27,7 +27,7 @@ class KLogo extends StatelessWidget {
                 ),
               ),
               Text(
-                'Manager 1.0.4',
+                'Manager 1.0.5',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
