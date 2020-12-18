@@ -1,5 +1,6 @@
 import 'package:e9pass_manager/service/file_service.dart';
 import 'package:e9pass_manager/service/image_servise.dart';
+import 'package:e9pass_manager/service/settings_Service.dart';
 import 'package:e9pass_manager/service/zip_service.dart';
 import 'package:e9pass_manager/views/splash.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => FileService()),
         ChangeNotifierProvider(create: (_) => ImageService(),),
         ChangeNotifierProvider(create: (_) => ZipService(),),
+        ChangeNotifierProvider(create: (_) => SettingsService(),),
       ],
       child: MaterialApp(
         title: 'E9pass Manager',

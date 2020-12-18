@@ -1,5 +1,6 @@
 import 'package:e9pass_manager/models/arcModel.dart';
 import 'package:e9pass_manager/models/erroeModel.dart';
+import 'package:e9pass_manager/service/settings_Service.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart ' as pw;
@@ -8,7 +9,7 @@ class PdfFactory {
   pw.Document pdf;
   
 
-  Future<pw.Document> getPdfFileWithStatement(List<ArcImage> fileList) async {
+  Future<pw.Document> getPdfFileWithStatement(List<ArcImage> fileList, SettingsService settingsService) async {
     pdf = pw.Document();
     var data = await rootBundle.load("assets/fonts/OpenSans-SemiBold.ttf");
     var kFontData = await rootBundle.load("assets/fonts/GothicA1-Medium.ttf");
@@ -40,18 +41,17 @@ class PdfFactory {
               ignoreMargins: true,
               child: pw.Stack(
                 children: [
-                  pw.Positioned(
-                    bottom: 5,
+                  settingsService.addFooter ? pw.Positioned(
+                    bottom: settingsService.footerMargin.toDouble(),
                     left: 0,
                     right: 0,
                     child: pw.Container(
-                      height: 10,
-                      width: PdfPageFormat.a4.width / 2,
+                      height: settingsService.footerThikness.toDouble(),
                       decoration: pw.BoxDecoration(
-                        color: PdfColor.fromHex('#404040')
+                        color: PdfColor.fromHex(settingsService.footerColor.substring(2))
                       ),
                     ),
-                  ),
+                  ) : pw.Container(),
                 ],
               ),
             )

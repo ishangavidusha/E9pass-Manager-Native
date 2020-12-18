@@ -2,6 +2,8 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:e9pass_manager/service/file_service.dart';
 import 'package:e9pass_manager/service/image_servise.dart';
 import 'package:e9pass_manager/service/pdf_service.dart';
+import 'package:e9pass_manager/service/settings_Service.dart';
+import 'package:e9pass_manager/utils/hexConverter.dart';
 import 'package:e9pass_manager/utils/my_colors.dart';
 import 'package:e9pass_manager/views/image_edit_view.dart';
 import 'package:e9pass_manager/widgets/get_files_ui.dart';
@@ -22,70 +24,6 @@ class _CreatePDFsState extends State<CreatePDFs> {
   PdfFactory _pdfFactory = PdfFactory();
   bool loading = false;
   bool converting = false;
-  double footerMargin = 5;
-  double footerThikness = 15;
-
-  Future _getPdfSettings(double devWidth, double devHeight) async {
-    return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return Dialog(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-            width: devWidth * 0.5,
-            height: devHeight * 0.6,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      'Footer Margin',
-                      style: TextStyle(
-                        color: AppColors.textColor,
-                      ),
-                    ),
-                    Spacer(),
-                    NumberPicker.integer(
-                      scrollDirection: Axis.horizontal,
-                      highlightSelectedValue: false,
-                      initialValue: footerMargin.toInt(), 
-                      minValue: 0, 
-                      maxValue: 20, 
-                      onChanged: (value) {
-                        setState(() {
-                          footerMargin = value.toDouble();
-                        });
-                      }
-                    ),
-                  ],
-                ),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    KButton(
-                      text: 'Cancel',
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                      selected: true,
-                    ),
-                    KButton(
-                      text: 'Done',
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                      },
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +55,19 @@ class _CreatePDFsState extends State<CreatePDFs> {
                     letterSpacing: 1.2,
                     color: AppColors.textColor
                   ),
+                ),
+                Spacer(),
+                Container(
+                  child: InkWell(
+                    onTap: () {
+                      _getPdfSettings(devWidth, devHeight);
+                    },
+                    customBorder: CircleBorder(),
+                    child: Image.asset('assets/icons/043-settings.png', scale: 14,),
+                  ),
+                ),
+                SizedBox(
+                  width: 35,
                 ),
               ],
             ),
@@ -198,53 +149,53 @@ class _CreatePDFsState extends State<CreatePDFs> {
                       setState(() {
                         converting = true;
                       });
-                      bool dialogResult = await _getPdfSettings(devWidth, devHeight);
-                      if (dialogResult) {
-                        pw.Document document;
-                        try {
-                          document = await _pdfFactory.getPdfFileWithStatement(_fileService.pickedImages);
-                        } catch (e) {
-                          print(e);
-                          //TODO : Change Animation
-                          CoolAlert.show(
-                            context: context,
-                            type: CoolAlertType.error,
-                            flareAsset: 'assets/flare/error_check.flr',
-                            title: 'Something went wrong!',
-                            text: e.toString(),
-                            onConfirmBtnTap: () {
-                              Navigator.of(context).pop();
-                            },
-                          );
-                        }
-                        String fileName = DateFormat("yyyyMMddhhmmss").format(DateTime.now());
-                        if (document != null) {
-                          _fileService.savePdf(document.save(), '$fileName-${_fileService.pickedImages.length}').then((value) => {
-                            if (value) {
-                              //TODO : Change Animation
-                              CoolAlert.show(
-                                context: context,
-                                type: CoolAlertType.success,
-                                flareAsset: 'assets/flare/success_check.flr',
-                                title: 'Successfully Saved!',
-                                onConfirmBtnTap: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            } else {
-                              //TODO : Change Animation
-                              CoolAlert.show(
-                                context: context,
-                                type: CoolAlertType.error,
-                                flareAsset: 'assets/flare/error_check.flr',
-                                title: 'Failed to save PDF',
-                                onConfirmBtnTap: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            }
-                          });
-                        }
+                      pw.Document document;
+                      try {
+                        document = await _pdfFactory.getPdfFileWithStatement(
+                          _fileService.pickedImages,
+                          Provider.of<SettingsService>(context, listen: false),
+                        );
+                      } catch (e) {
+                        print(e);
+                        //TODO : Change Animation
+                        CoolAlert.show(
+                          context: context,
+                          type: CoolAlertType.error,
+                          flareAsset: 'assets/flare/error_check.flr',
+                          title: 'Something went wrong!',
+                          text: e.toString(),
+                          onConfirmBtnTap: () {
+                            Navigator.of(context).pop();
+                          },
+                        );
+                      }
+                      String fileName = DateFormat("yyyyMMddhhmmss").format(DateTime.now());
+                      if (document != null) {
+                        _fileService.savePdf(document.save(), '$fileName-${_fileService.pickedImages.length}').then((value) => {
+                          if (value) {
+                            //TODO : Change Animation
+                            CoolAlert.show(
+                              context: context,
+                              type: CoolAlertType.success,
+                              flareAsset: 'assets/flare/success_check.flr',
+                              title: 'Successfully Saved!',
+                              onConfirmBtnTap: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          } else {
+                            //TODO : Change Animation
+                            CoolAlert.show(
+                              context: context,
+                              type: CoolAlertType.error,
+                              flareAsset: 'assets/flare/error_check.flr',
+                              title: 'Failed to save PDF',
+                              onConfirmBtnTap: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          }
+                        });
                       }
                       setState(() {
                         converting = false;
@@ -393,6 +344,129 @@ class _CreatePDFsState extends State<CreatePDFs> {
           ),
         ],
       ),
+    );
+  }
+
+  Future _getPdfSettings(double devWidth, double devHeight) async {
+    SettingsService _settingsService = await Provider.of<SettingsService>(context, listen: false).getData();
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        SettingsService _settings = _settingsService;
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(
+                'PDF Settings',
+                style: TextStyle(
+                  color: AppColors.textColor,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Footer Margin : ${_settings.footerMargin}',
+                        style: TextStyle(
+                          color: AppColors.textColor,
+                        ),
+                      ),
+                      Spacer(),
+                      NumberPicker.integer(
+                        itemExtent: 30,
+                        scrollDirection: Axis.horizontal,
+                        highlightSelectedValue: true,
+                        initialValue: _settings.footerMargin, 
+                        minValue: 0, 
+                        maxValue: 40,
+                        step: 2,
+                        onChanged: (value) => setState(() => _settings.footerMargin = value)
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Footer Thikness : ${_settings.footerThikness}',
+                        style: TextStyle(
+                          color: AppColors.textColor,
+                        ),
+                      ),
+                      Spacer(),
+                      NumberPicker.integer(
+                        itemExtent: 30,
+                        scrollDirection: Axis.horizontal,
+                        highlightSelectedValue: true,
+                        initialValue: _settings.footerThikness, 
+                        minValue: 0, 
+                        maxValue: 60,
+                        step: 5,
+                        onChanged: (value) => setState(() => _settings.footerThikness = value)
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Footer Color : ${_settings.footerColor.toUpperCase()}',
+                        style: TextStyle(
+                          color: AppColors.textColor,
+                        ),
+                      ),
+                      Spacer(),
+                      NumberPicker.integer(
+                        scrollDirection: Axis.horizontal,
+                        highlightSelectedValue: true,
+                        initialValue: HexColor(_settings.footerColor).red, 
+                        minValue: 0, 
+                        maxValue: 255,
+                        step: 2,
+                        onChanged: (value) => setState(() => _settings.footerColor = Color.fromRGBO(value.toInt(), value.toInt(), value.toInt(), 1).value.toRadixString(16))
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Footer : ${_settings.addFooter ? 'Enabled' : 'Disabled'}',
+                        style: TextStyle(
+                          color: AppColors.textColor,
+                        ),
+                      ),
+                      Spacer(),
+                      Switch(
+                        value: _settings.addFooter,
+                        onChanged: (value) => setState(() => _settings.addFooter = value),
+                        activeTrackColor: AppColors.selectedBtColor.withAlpha(80),
+                        activeColor: AppColors.selectedBtColor,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                KButton(
+                  text: 'Cancel',
+                  onPressed: () => Navigator.of(context).pop(false),
+                  selected: true,
+                ),
+                KButton(
+                  text: 'Done',
+                  onPressed: () async {
+                    await Provider.of<SettingsService>(context, listen: false).setData(_settings.footerMargin, _settings.footerThikness, _settings.footerColor, _settings.addFooter);
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            );
+          }
+        );
+      },
     );
   }
 }
