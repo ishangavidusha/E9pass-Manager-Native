@@ -126,6 +126,7 @@ class FileService with ChangeNotifier {
   List<Certificate> searchResult = List();
   String certFolderPath;
   bool indexing = false;
+  bool isAscending = false;
   List<ArcImage> pickedImages = List();
   
 
@@ -146,12 +147,31 @@ class FileService with ChangeNotifier {
     );
     if (result.canceled != true) {
       pickedImages.addAll(await compute(readImages, result));
-      pickedImages.sort((a, b) => a.name.compareTo(b.name));
+      // pickedImages.sort((a, b) => a.name.compareTo(b.name));
+      isAscending = false;
       notifyListeners();
       return true;
     } else {
       notifyListeners();
       return false;
+    }
+  }
+
+  bool ascending(bool isAscendingValue) {
+    if (isAscendingValue) {
+      if (pickedImages != null && pickedImages.length > 2) {
+        pickedImages.sort((a, b) => a.name.compareTo(b.name));
+        isAscending = true;
+        notifyListeners();
+        return isAscending;
+      }
+      isAscending = false;
+      return isAscending;
+    } else {
+      pickedImages.shuffle();
+      notifyListeners();
+      isAscending = false;
+      return isAscending;
     }
   }
 

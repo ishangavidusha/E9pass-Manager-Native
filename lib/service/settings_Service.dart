@@ -46,13 +46,13 @@ class SettingsService with ChangeNotifier {
       notifyListeners();
       return _settingsService;
     } else {
-      footerMargin = 5;
+      footerMargin = 6;
       footerThikness = 15;
       footerColor = 'ff404040';
       addFooter = false;
       notifyListeners();
       return SettingsService(
-        footerMargin: 5,
+        footerMargin: 6,
         footerThikness: 15,
         footerColor: 'ff404040',
         addFooter: false

@@ -19,9 +19,9 @@ class _KButtonState extends State<KButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
+      width: 180,
       height: 60,
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: MouseRegion(
         onEnter: (event) {
           if (widget.onPointerHover != null) {

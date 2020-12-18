@@ -121,6 +121,25 @@ class _CreatePDFsState extends State<CreatePDFs> {
                   width: 10,
                 ),
                 Spacer(),
+                Text(
+                  'Ascending',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    letterSpacing: 1.2,
+                    color: AppColors.secondTextColor
+                  ),
+                ),
+                Switch(
+                  value: _fileService.isAscending,
+                  onChanged: (value) {
+                    setState(() {
+                      _fileService.ascending(value);
+                    });
+                  },
+                  activeTrackColor: AppColors.selectedBtColor.withAlpha(80),
+                  activeColor: AppColors.selectedBtColor,
+                ),
                 Transform.scale(
                   scale: 0.8,
                   child: KButton(
